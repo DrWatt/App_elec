@@ -171,7 +171,7 @@ ENTITY out_back IS
         N: POSITIVE := 3);
     PORT(
         input_pred: IN FLOAT32;
-        input_true: IN FLOAT_VECTOR(N-1 DOWNTO 0);
+        input_true: IN FLOAT32;
         output_back: OUT FLOAT_VECTOR(N-1 DOWNTO 0);
         clk: IN BIT
         );
@@ -202,13 +202,17 @@ BEGIN
             IF i = N-1 THEN
                 bufferr(i) := input_pred;
             ELSIF (bufferr(i+1) /= input_pred) THEN
-                bufferr(i) := input_pred;
+                bufferr(i) := input_pred - input_true;
+                bufferr(i) := bufferr(i)*bufferr(i);
             END IF;
 
         --cap := cap + 1;
         --IF cap = 10 THEN count:= N; END IF;
         END LOOP;
-        output_back <= subtrac(bufferr,input_true);
+        --FOR i IN bufferr'RANGE LOOP
+        --    bufferr
+        --END LOOP;
+        output_back <= bufferr;
     END PROCESS;
 
 END ARCHITECTURE;
